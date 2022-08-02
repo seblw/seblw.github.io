@@ -1,8 +1,36 @@
 baseURL = 'http://seblw.me'
 languageCode = 'en-us'
-title = 'Sebastian | code & stuff'
-theme = "elephants"
+title = "seblw's blog"
+theme = "etch"
+enableInlineShortcodes = true
+pygmentsCodeFences = true
+pygmentsUseClasses = true
 
 [params]
-    dateform = "2006/02/01"
-    sitename = "Sebastian | code & stuff"
+  description = "code & stuff"
+  copyright = "Copyright © 2022 seblw"
+  dark = "auto"
+  highlight = true
+
+[menu]
+  [[menu.main]]
+    identifier = "posts"
+    name = "posts"
+    title = "posts"
+    url = "/posts/"
+    weight = 10
+
+  [[menu.main]]
+    identifier = "twitter"
+    name = "twitter"
+    title = "twitter"
+    url = "https://twitter.com/seblw"
+    weight = 20
+
+  [[menu.main]]
+    identifier = "github"
+    name = "github"
+    title = "github"
+    url = "https://github.com/seblw"
+    weight = 30
+
