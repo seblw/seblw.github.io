@@ -1,0 +1,8 @@
+baseURL = 'http://seblw.me'
+languageCode = 'en-us'
+title = 'Sebastian | code & stuff'
+theme = "elephants"
+
+[params]
+    dateform = "2006/02/01"
+    sitename = "Sebastian | code & stuff"
