@@ -9,7 +9,7 @@ And since this is mostly for personal needs I don't want to leverage any complic
 
 The goal of this piece is to use Ansbile to create a user account on a remote machine with sudo capabilities and set up a secure connection to it, with no passwords, just SSH keys generated during the process.
 
-Please, keep in mind this is an opinionated approach for my use case: I use [1password to generate and store root keys](https://developer.1password.com/docs/ssh/), and I upload the public key of the root to the VPS provider (Vultr for my case) so that I can deploy a server with root key already there.
+Please, keep in mind this is an opinionated approach for my use case: I use [1password to generate and store root keys](https://developer.1password.com/docs/ssh/), and I upload the public key of the root to the VPS provider (I'm going to use Ubuntu on Vultr) so that I can deploy a server with root key already there.
 
 ## Bootstrapping VPS connection
 
