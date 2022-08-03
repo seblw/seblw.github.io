@@ -17,7 +17,7 @@ pygmentsUseClasses = true
     identifier = "posts"
     name = "posts"
     title = "posts"
-    url = "/posts/"
+    url = "/"
     weight = 10
 
   [[menu.main]]
@@ -34,3 +34,12 @@ pygmentsUseClasses = true
     url = "https://github.com/seblw"
     weight = 30
 
+[permalinks]
+  posts = "/:title/"
+
+[markup.goldmark.renderer]
+  # Allow HTML in Markdown
+  unsafe = true
+
+  [markup.tableOfContents]
+    ordered = true
