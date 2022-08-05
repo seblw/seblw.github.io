@@ -54,7 +54,7 @@ Let's start with a file named playbook.yml.
 
 We begin with the header: a name of our playbook, hosts it targets, and become directive which elevates the privileges (to root, by default).
 
-{{< highlight yaml "linenos=table,linenostart=1" >}}
+{{< highlight yaml >}}
 ---
 - name: Create user
   hosts: servers
@@ -67,7 +67,7 @@ We define a series of variables that will be used along the use of playbook.
 
 [Lookup plugin](https://docs.ansible.com/ansible/latest/user_guide/playbooks_lookups.html) is used to access data from sources outside of the playbook like environment or filesystem.  
 
-{{< highlight yaml "linenos=table,linenostart=5" >}}
+{{< highlight yaml >}}
 vars:
   username: "seblw"
   local_home_path: "{{ lookup('env','HOME') }}"
@@ -80,7 +80,7 @@ vars:
 
 The next step is to make sure ["wheel" group](https://en.wikipedia.org/wiki/Wheel_(computing)) exists and let group members use sudo command without a password.
 
-{{< highlight yaml "linenos=table,linenostart=12" >}}
+{{< highlight yaml >}}
 tasks:
   - name: ensure 'wheel' group
     group:
@@ -101,7 +101,7 @@ Since we've run ansible with `-u root` flag we need to switch back to the user w
 
 Later on, we generate SSH keypair in a location pointed by "local_key_path" variable, for this example, it's "~/.ssh/seblw_caipirinha".
 
-{{< highlight yaml "linenos=table,linenostart=26" >}}
+{{< highlight yaml >}}
 - name: generate an OpenSSH keypair on localhost
   become_user: "{{ lookup('env', 'USER') }}"
   local_action:
@@ -112,7 +112,7 @@ Later on, we generate SSH keypair in a location pointed by "local_key_path" vari
 
 We then switch back to the remote machine and finally create a new user there which belongs to the "wheel" group and set the authorized key to the one we generated in the previous step.
 
-{{< highlight yaml "linenos=table,linenostart=33" >}}
+{{< highlight yaml >}}
 - name: create user '{{ username }}'
   user:
     name: "{{ username }}"
@@ -135,7 +135,7 @@ Mind the notify directive, it calls a "handler".
 
 In our example, we trigger SSH server restart.
 
-{{< highlight yaml "linenos=table,linenostart=47" >}}
+{{< highlight yaml >}}
 - name: disable password authentication
   lineinfile:
     path: /etc/ssh/sshd_config
@@ -157,7 +157,7 @@ In our example, we trigger SSH server restart.
 
 And at the end of the playbook, we define the handler.
 
-{{< highlight yaml "linenos=table,linenostart=65" >}}
+{{< highlight yaml >}}
 handlers:
   - name: restart sshd
     service:
