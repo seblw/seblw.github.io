@@ -71,7 +71,7 @@ We define a series of variables that will be used along the use of playbook.
 vars:
   username: "seblw"
   local_home_path: "{{ lookup('env','HOME') }}"
-  local_key_path:  "{{ local_home_path }}/.ssh/ \
+  local_key_path:  "{{ local_home_path }}/.ssh/\
       {{ username }}_{{ inventory_hostname }}"
   local_pubkey_path: "{{ local_key_path }}.pub"
   local_pubkey_file: "{{ lookup('file', \ 
