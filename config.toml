@@ -1,45 +1,13 @@
 baseURL = 'http://seblw.me'
 languageCode = 'en-us'
 title = "seblw's blog"
-theme = "etch"
-enableInlineShortcodes = true
-pygmentsCodeFences = true
-pygmentsUseClasses = true
+theme = "nostyleplease"
 
 [params]
-  description = "code & stuff"
-  copyright = "Copyright © 2022 seblw"
-  dark = "auto"
-  highlight = true
+  [params.theme_config]
+    back_home_text = ".."
+    date_format = "2006-01-02"
 
-[menu]
-  [[menu.main]]
-    identifier = "posts"
-    name = "posts"
-    title = "posts"
-    url = "/"
-    weight = 10
 
-  [[menu.main]]
-    identifier = "twitter"
-    name = "twitter"
-    title = "twitter"
-    url = "https://twitter.com/seblw"
-    weight = 20
-
-  [[menu.main]]
-    identifier = "github"
-    name = "github"
-    title = "github"
-    url = "https://github.com/seblw"
-    weight = 30
-
-[permalinks]
-  posts = "/:title/"
-
-[markup.goldmark.renderer]
-  # Allow HTML in Markdown
-  unsafe = true
-
-  [markup.tableOfContents]
-    ordered = true
+[markup]
+  [markup.highlight]

@@ -1,0 +1,26 @@
+[[entries]]
+title = "about me"
+
+  [[entries.entries]]
+  title = "dev @ monerium"
+
+  [[entries.entries]]
+  title = "github"
+  url = "https://github.com/seblw"
+
+  [[entries.entries]]
+  title = "twitter"
+  url = "https://twitter.com/seblw"
+
+[[entries]]
+title = "posts"
+
+  [entries.post_list]
+  limit = 5
+  show_more = true
+  show_more_text = "See more..."
+  show_more_url = "posts"
+
+[[entries]]
+title = "rss"
+url = "index.xml"
