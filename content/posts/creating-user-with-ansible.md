@@ -16,21 +16,22 @@ Please, keep in mind this is an opinionated approach for my use case: I use [1pa
 Assuming the VPS is up (thus the root key is uploaded too) one can create an [inventory file](https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html).  
 Before doing so I'm going to create an alias in ~/.ssh/config:
 
-{{< highlight console >}}
+```
 Host caipirinha
     Hostname 65.123.123.123
-{{< / highlight >}}
+```
 
 And here's the inventory I called "hosts":
 
-{{< highlight console >}}
+```
 [servers]
 caipirinha
-{{< / highlight >}}
+```
 
 When all the above is complete we can try to connect to the server.  
 Since our VPS provider already uploaded the root key we connect as a root:
-{{< highlight console >}}
+
+```
 $ ansible all -i hosts -u root -m ping
 caipirinha | SUCCESS => {
     "ansible_facts": {
@@ -39,7 +40,7 @@ caipirinha | SUCCESS => {
     "changed": false,
     "ping": "pong"
 }
-{{< / highlight >}}
+```
 
 What this command does is to use "hosts" file as an inventory, "root" as a user and "ping" as a module.  
 "all" means that we execute the module on all entries in the inventory.  
@@ -54,12 +55,12 @@ Let's start with a file named playbook.yml.
 
 We begin with the header: a name of our playbook, hosts it targets, and become directive which elevates the privileges (to root, by default).
 
-{{< highlight yaml >}}
+```
 ---
 - name: Create user
   hosts: servers
   become: true
-{{< / highlight >}}
+```
 
 We define a series of variables that will be used along the use of playbook.  
 "username" is the name of the user that will be created on the server.  
@@ -67,7 +68,7 @@ We define a series of variables that will be used along the use of playbook.
 
 [Lookup plugin](https://docs.ansible.com/ansible/latest/user_guide/playbooks_lookups.html) is used to access data from sources outside of the playbook like environment or filesystem.  
 
-{{< highlight yaml >}}
+```
 vars:
   username: "seblw"
   local_home_path: "{{ lookup('env','HOME') }}"
@@ -76,11 +77,11 @@ vars:
   local_pubkey_path: "{{ local_key_path }}.pub"
   local_pubkey_file: "{{ lookup('file', \ 
     local_pubkey_path) }}"
-{{< / highlight >}}
+```
 
 The next step is to make sure ["wheel" group](https://en.wikipedia.org/wiki/Wheel_(computing)) exists and let group members use sudo command without a password.
 
-{{< highlight yaml >}}
+```
 tasks:
   - name: ensure 'wheel' group
     group:
@@ -94,25 +95,25 @@ tasks:
       regexp: '^%wheel'
       line: '%wheel ALL=(ALL) NOPASSWD: ALL'
       validate: '/usr/sbin/visudo -cf %s'
-{{< / highlight >}}
+```
 
 Here's the interesting piece. We use ["local_action" module](https://docs.ansible.com/ansible/latest/user_guide/playbooks_delegation.html) which let us act as the host computer i.e. the machine we run ansible command from.  
 Since we've run ansible with `-u root` flag we need to switch back to the user we logged to our host machine - we get the username from `$USER` env. variable).
 
 Later on, we generate SSH keypair in a location pointed by "local_key_path" variable, for this example, it's "~/.ssh/seblw_caipirinha".
 
-{{< highlight yaml >}}
+```
 - name: generate an OpenSSH keypair on localhost
   become_user: "{{ lookup('env', 'USER') }}"
   local_action:
     module: openssh_keypair
     path: "{{ local_key_path }}"
     type: ed25519
-{{< / highlight >}}
+```
 
 We then switch back to the remote machine and finally create a new user there which belongs to the "wheel" group and set the authorized key to the one we generated in the previous step.
 
-{{< highlight yaml >}}
+```
 - name: create user '{{ username }}'
   user:
     name: "{{ username }}"
@@ -126,7 +127,7 @@ We then switch back to the remote machine and finally create a new user there wh
     user: "{{ username }}"
     state: present
     key: "{{ local_pubkey_file }}"
-{{< / highlight >}}
+```
 
 We also do not forget about security tweaks to SSH server configuration - disabling password authentication and (optionally) root login.  
 Mind the notify directive, it calls a "handler".  
@@ -135,7 +136,7 @@ Mind the notify directive, it calls a "handler".
 
 In our example, we trigger SSH server restart.
 
-{{< highlight yaml >}}
+```
 - name: disable password authentication
   lineinfile:
     path: /etc/ssh/sshd_config
@@ -153,38 +154,38 @@ In our example, we trigger SSH server restart.
     line: 'PermitRootLogin no'
     validate: '/usr/sbin/sshd -T -f %s'
   notify: restart sshd
-{{< / highlight >}}
+```
 
 And at the end of the playbook, we define the handler.
 
-{{< highlight yaml >}}
+```
 handlers:
   - name: restart sshd
     service:
       name: sshd
       state: restarted
-{{< / highlight >}}
+```
 
 
 ## Running the playbook
 
 Now we are ready to run the playbook.  
 
-{{< highlight console >}}
+```
 $ ansible-playbook -i hosts -u root playbook.yml
 PLAY [Create user] ****************************************************
 
 TASK [Gathering Facts] ************************************************
 [...]
-{{< / highlight >}}
+```
 
 When it is finished we can finally log in using the SSH key and username.  
 
-{{< highlight console >}}
+```
 $ ssh -i ~/.ssh/seblw_caipirinha seblw@caipirinha
 Welcome to Ubuntu 22.04.1 LTS (GNU/Linux 5.15.0-40-generic x86_64)
 [...]
-{{< / highlight >}}
+```
 
 Success!  
 
