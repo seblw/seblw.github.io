@@ -3,18 +3,20 @@ title: "Creating user with Ansible"
 date: 2022-08-03T21:31:38+02:00
 ---
 
-I usually write code. Sometimes I run tools in the background. From time to time I process data that requires lots of resources.   
-To do all of those things I need to have some specific environment. While some of this stuff can be done on my personal machine, there are cases when one needs to set up a remote machine.  
-And since this is mostly for personal needs I don't want to leverage any complicated tools and stay minimalistic.  
+I usually write code. Occasionally, I use tools that run in the background. From time to time, I have to process data that takes a lot of resources.  
 
-The goal of this piece is to use Ansbile to create a user account on a remote machine with sudo capabilities and set up a secure connection to it, with no passwords, just SSH keys generated during the process.
+To do all of those things, I need to have some specific environment. While some of this stuff can be done on my personal machine, there are cases when one needs to set up a remote machine.  
+And since this is mostly for personal needs, I don't want to leverage any complicated tools and stay minimalistic.  
+
+The goal is to use Ansbile to create a user account on a remote machine with sudo capabilities and set up a secure connection to it, with no passwords, only SSH keys generated during the process.
 
 Please, keep in mind this is an opinionated approach for my use case: I use [1password to generate and store root keys](https://developer.1password.com/docs/ssh/), and I upload the public key of the root to the VPS provider (I'm going to use Ubuntu on Vultr) so that I can deploy a server with root key already there.
 
 ## Bootstrapping VPS connection
 
 Assuming the VPS is up (thus the root key is uploaded too) one can create an [inventory file](https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html).  
-Before doing so I'm going to create an alias in ~/.ssh/config:
+
+Before doing so, I'm going to create an alias in ~/.ssh/config:
 
 ```
 Host caipirinha
@@ -28,8 +30,9 @@ And here's the inventory I called "hosts":
 caipirinha
 ```
 
-When all the above is complete we can try to connect to the server.  
-Since our VPS provider already uploaded the root key we connect as a root:
+When all the above is complete, we can try to connect to the server.  
+
+Since our VPS provider already uploaded the root key, we connect as a root:
 
 ```
 $ ansible all -i hosts -u root -m ping
@@ -47,7 +50,7 @@ What this command does is to use "hosts" file as an inventory, "root" as a user 
 
 For this example, instead of "all" one can use "servers" or "caipirinha" too.
 
-By the way, "ping" might be confusing at first because what it really does is to perform a test SSH connection, not to send ICMP packet.
+By the way, "ping" might be confusing at first because what it really does is to perform a test SSH connection, not to send an ICMP packet.
 
 ## Creating a playbook
   
@@ -63,7 +66,9 @@ We begin with the header: a name of our playbook, hosts it targets, and become d
 ```
 
 We define a series of variables that will be used along the use of playbook.  
+
 "username" is the name of the user that will be created on the server.  
+
 "local_" prefixed variables will be used for generating SSH key pairs on our machine.  
 
 [Lookup plugin](https://docs.ansible.com/ansible/latest/user_guide/playbooks_lookups.html) is used to access data from sources outside of the playbook like environment or filesystem.  
@@ -98,9 +103,10 @@ tasks:
 ```
 
 Here's the interesting piece. We use ["local_action" module](https://docs.ansible.com/ansible/latest/user_guide/playbooks_delegation.html) which let us act as the host computer i.e. the machine we run ansible command from.  
-Since we've run ansible with `-u root` flag we need to switch back to the user we logged to our host machine - we get the username from `$USER` env. variable).
 
-Later on, we generate SSH keypair in a location pointed by "local_key_path" variable, for this example, it's "~/.ssh/seblw_caipirinha".
+Since we've run ansible with `-u root` flag, we need to switch back to the user we logged to our host machine (we get the username from `$USER` env. variable).
+
+Later on, we generate SSH key pair in a location pointed by "local_key_path" variable, for this example, it's "~/.ssh/seblw_caipirinha".
 
 ```
 - name: generate an OpenSSH keypair on localhost
@@ -179,7 +185,7 @@ TASK [Gathering Facts] ************************************************
 [...]
 ```
 
-When it is finished we can finally log in using the SSH key and username.  
+When it is finished, we can finally log in using the SSH key and username.  
 
 ```
 $ ssh -i ~/.ssh/seblw_caipirinha seblw@caipirinha
