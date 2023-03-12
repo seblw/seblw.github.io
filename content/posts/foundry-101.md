@@ -83,11 +83,11 @@ If you want to add more, then all remappings need to be stored in `remappings.tx
 
 From now on, you can use statements like  
  `import "solmate/src/tokens/ERC20.sol";`  
- and forge will automatically resolve *solmate* into *lib/solmate/src/* when needed.
+ and forge will automatically resolve `solmate` into `lib/solmate/src/` when needed.
 
 ### Building the project
 
-Forge generated some code for us in *src/Counter.sol*, let's take a look.
+Forge generated some code for us in `src/Counter.sol`, let's take a look.
 
 ```
 // SPDX-License-Identifier: UNLICENSED
@@ -117,7 +117,7 @@ As you can see, the code is simple, but it serves well in our baby steps. It cre
 
 The great thing about Foundry is that its tools feel very "native", for example, a test in foundry is just another smart contract that interacts with our code.  
 
-Here's a part of generated *test/Counter.t.sol*:
+Here's a part of generated `test/Counter.t.sol`:
 
 ```
 // SPDX-License-Identifier: UNLICENSED
@@ -205,7 +205,7 @@ Traces:
 Test result: ok. 1 passed; 0 failed; finished in 9.63ms
 ```
 
-Notice the *runs: 256* - it means our test case was run with 256 mutations of type uint256.  
+Notice the `runs: 256` - it means our test case was run with 256 mutations of type uint256.  
 Tidle ("~") on the other hand informs us on the median gas used across all runs.
 
 ### Deployment
@@ -214,7 +214,7 @@ OK, we have the code, it's tested, and now we'd like to deploy it to the network
 
 There are two ways. 
 
-For simple contracts, we can just use *create* subcommand.
+For simple contracts, we can just use `create` subcommand.
 
 ```
 $ forge create \
@@ -380,7 +380,7 @@ First, let's run our anvil instance.
 $ anvil
 ```
 
-Next, we'll deploy Counter contract via *forge create* as follows:
+Next, we'll deploy Counter contract via `forge create` as follows:
 
 ```
 $ forge create \
@@ -391,7 +391,7 @@ $ forge create \
 
 And finally, we can interact with it on chain using cast.
 
-Let's use *send* subcommand first to invoke *increment()* function (thus send a transaction).
+Let's use `send` subcommand first to invoke `increment()` function (thus send a transaction).
 
 ```
 $ cast send <addr> "increment()" --private-key 0xac097...
@@ -415,7 +415,7 @@ transactionIndex        0
 type
 ```
 
-Then use *call* subcommand to query *number()* getter (no transaction).
+Then use `call` subcommand to query `number()` getter (no transaction).
 
 ```
 $ cast call <addr> "number()"
@@ -423,7 +423,7 @@ $ cast call <addr> "number()"
 0x0000000000000000000000000000000000000000000000000000000000000001
 ```
 
-Once again *send*, this time with *setNumber(uint256)* signature and an argument.
+Once again `send`, this time with `setNumber(uint256)` signature and an argument.
 
 ```
 $ cast send --private-key 0xac097... <addr> "setNumber(uint256)" 0x1337 
