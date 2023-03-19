@@ -1,6 +1,6 @@
 baseURL = 'http://seblw.me'
 languageCode = 'en-us'
-title = "seblw's blog"
+title = "sebastian's blog"
 theme = "nostyleplease"
 
 [params]
